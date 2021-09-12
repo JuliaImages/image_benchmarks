@@ -75,4 +75,7 @@ function taskplots(jobtag::Function, jobname::Function, filelabel::Pair...; colo
     return fig
 end
 
-# taskplots(randomtag, randomlabel, "julia/julia_generics.csv" => "Julia", "python-skimage/python_generics.csv" => "python-skimage")
+# taskplots(randomtag, randomlabel, "julia/julia_generics.csv" => "Julia",
+#                                   "python-skimage/python_generics.csv" => "python-skimage",
+#                                   "opencv/opencv_generics.csv" => "OpenCV")
+
