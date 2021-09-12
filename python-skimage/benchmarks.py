@@ -18,7 +18,7 @@ def run_gradient(img):
     return (skimage.filters.sobel(img, axis=0), skimage.filters.sobel(img, axis=1))
 
 def run_blur(img):
-    return skimage.filters.gaussian(img, 5, multichannel=True)  # channel_axis=img.ndim-1)
+    return skimage.filters.gaussian(img, 5, truncate=2, multichannel=True)  # channel_axis=img.ndim-1)
 
 def run_histeq(img):
     if img.shape[-1] == 3:   # not-very-robust signal of a color image
@@ -40,4 +40,4 @@ def time_generics(workdir):
         tasks["histeq"][fn] = min(timeit.repeat(f'run_histeq(img)', number=1, repeat=nrep, globals={"img": img, "run_histeq":run_histeq}))
     return tasks
 
-# time_generics("/tmp/imgs")
+# tdata = time_generics("/tmp/imgs")
