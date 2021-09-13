@@ -14,7 +14,7 @@ randomlabel(tag) = (tag[1] ? "RGB" : "Gray") * "{" * eltypeidx[tag[2]] * "}, $(t
 
 hexhash(c) = "#"*hex(c)
 
-function taskplots(jobtag::Function, jobname::Function, filelabel::Pair...; colordict=nothing, tasknames=nothing)
+function taskplots(jobtag::Function, jobname::Function, filelabel::Pair...; colordict=nothing, tasknames=nothing, pervoxel::Bool=true)
     # Read all the data
     benchdata = Dict{String,GroupedDataFrame{DataFrame}}()
     for (file, label) in filelabel
@@ -38,7 +38,7 @@ function taskplots(jobtag::Function, jobname::Function, filelabel::Pair...; colo
     end
     ncols = floor(Int, sqrt(length(tasknames)))
     nrows = ceil(Int, length(tasknames)/ncols)
-    fig, axes = plt.subplots(nrows=nrows, ncols=ncols)
+    fig, axes = plt.subplots(nrows=nrows, ncols=ncols, gridspec_kw=Dict("bottom"=>0.2))
     for i = length(tasknames)+1:length(axes)
         axes[i].set_axis_off()  # close()
     end
@@ -50,7 +50,14 @@ function taskplots(jobtag::Function, jobname::Function, filelabel::Pair...; colo
             if xlbls === nothing
                 xlbls = jobname.(jobtag.(data."File"))
             end
-            hline = ax.plot(data."Time(s)"; color=colordict[label], marker="x")
+            y = data."Time(s)"
+            if pervoxel
+                nvox = map(data."File") do fn
+                    jobtag(fn)[end]^2
+                end
+                y ./= nvox
+            end
+            hline = ax.plot(y; color=colordict[label], marker="x")
             if length(legend_labels) < length(filelabel)
                 push!(legend_labels, label)
                 push!(hlines, first(hline))
@@ -66,8 +73,6 @@ function taskplots(jobtag::Function, jobname::Function, filelabel::Pair...; colo
         ax.set_yscale("log")
         if axidx[2] == 1
             ax.set_ylabel("Time (s)")
-        else
-            ax.set_yticks([])
         end
         ax.set_title(k)
     end
