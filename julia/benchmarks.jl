@@ -24,6 +24,7 @@ end
 function time_generics!(tdata, workdir, taskitems)
     @showprogress "Timing generic operations: " for fn in readdir(workdir)
         img = load(joinpath(workdir, fn))
+        fn, _ = splitext(fn)
         "complement" ∈ taskitems && (tdata["complement"][fn] = @belapsed run_complement($img) samples=16 evals=1)
         "mean" ∈ taskitems       && (tdata["mean"][fn] = @belapsed run_mean(imgr) samples=16 evals=1 setup=(imgr = setup_mean($img)))
         "gradient" ∈ taskitems   && (tdata["gradient"][fn] = @belapsed run_gradient($img) samples=16 evals=1)

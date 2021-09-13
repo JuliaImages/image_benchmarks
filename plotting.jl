@@ -6,7 +6,7 @@ using PyPlot
 const rexeltype = r"N0f8|N0f16|Float32"
 const idxeltype = Dict("N0f8"=>1, "N0f16"=>2, "Float32"=>3)
 const eltypeidx = Dict(v=>k for (k, v) in idxeltype)
-const rexsize = r"_(\d+)\."
+const rexsize = r"_(\d+)$"
 
 randomtag(fn) = (occursin(r"rgb", fn), idxeltype[match(rexeltype, fn).match], parse(Int, only(match(rexsize, fn).captures)))
 randomlabel(tag) = (tag[1] ? "RGB" : "Gray") * "{" * eltypeidx[tag[2]] * "}, $(tag[3])"

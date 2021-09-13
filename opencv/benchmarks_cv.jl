@@ -40,6 +40,7 @@ function time_generics(workdir)
     tasks = Dict(task=>Dict{String,Float64}() for task in tasknames)
     @showprogress "Timing generic operations: " for fn in readdir(workdir)
         img = OpenCV.imread(joinpath(workdir, fn), OpenCV.IMREAD_UNCHANGED)
+        fn, _ = splitext(fn)
         if isempty(img)
             for tn in tasknames
                 tasks[tn][fn] = NaN

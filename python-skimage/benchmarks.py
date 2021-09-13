@@ -39,6 +39,7 @@ def time_generics(workdir):
 def time_generics_(tdata, workdir, taskitems):
     for fn in tqdm(os.listdir(workdir), desc="Timing generic operations: "):
         img = io.imread(os.path.join(workdir, fn))
+        fn, _ = os.path.splitext(fn)
         if "complement" in taskitems:
             tdata["complement"][fn] = min(timeit.repeat(f'run_complement(img)', number=1, repeat=nrep, globals={"img": img, "run_complement":run_complement}))
         if "mean" in taskitems:
