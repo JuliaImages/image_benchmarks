@@ -9,6 +9,9 @@ from tqdm import tqdm
 
 nrep = 16
 
+def run_complement(img):
+    skimage.util.invert(img)
+
 def setup_mean(img):
     return np.repeat(img.reshape((1, *img.shape)), 5, axis=0)
 def run_mean(imgr):
@@ -30,14 +33,22 @@ def run_histeq(img):
         return skimage.exposure.equalize_hist(img, nbins = 256)
 
 def time_generics(workdir):
-    tasks = {task:{} for task in ["complement", "mean", "gradient", "blur", "histeq"]}
+    tdata = {task:{} for task in ["complement", "mean", "gradient", "blur", "histeq"]}
+    return time_generics_(tdata, workdir, tdata.keys())
+
+def time_generics_(tdata, workdir, taskitems):
     for fn in tqdm(os.listdir(workdir), desc="Timing generic operations: "):
         img = io.imread(os.path.join(workdir, fn))
-        tasks["complement"][fn] = min(timeit.repeat(f'skimage.util.invert(img)', number=1, repeat=nrep, globals={"img": img, "skimage":skimage}))
-        tasks["mean"][fn] = min(timeit.repeat(f'run_mean(imgr)', f'imgr = setup_mean(img)', number=1, repeat=nrep, globals={"img": img, "setup_mean":setup_mean, "run_mean":run_mean}))
-        tasks["gradient"][fn] = min(timeit.repeat(f'run_gradient(img)', number=1, repeat=nrep, globals={"img": img, "run_gradient":run_gradient}))
-        tasks["blur"][fn] = min(timeit.repeat(f'run_blur(img)', number=1, repeat=nrep, globals={"img": img, "run_blur":run_blur}))
-        tasks["histeq"][fn] = min(timeit.repeat(f'run_histeq(img)', number=1, repeat=nrep, globals={"img": img, "run_histeq":run_histeq}))
-    return tasks
+        if "complement" in taskitems:
+            tdata["complement"][fn] = min(timeit.repeat(f'run_complement(img)', number=1, repeat=nrep, globals={"img": img, "run_complement":run_complement}))
+        if "mean" in taskitems:
+            tdata["mean"][fn] = min(timeit.repeat(f'run_mean(imgr)', f'imgr = setup_mean(img)', number=1, repeat=nrep, globals={"img": img, "setup_mean":setup_mean, "run_mean":run_mean}))
+        if "gradient" in taskitems:
+            tdata["gradient"][fn] = min(timeit.repeat(f'run_gradient(img)', number=1, repeat=nrep, globals={"img": img, "run_gradient":run_gradient}))
+        if "blur" in taskitems:
+            tdata["blur"][fn] = min(timeit.repeat(f'run_blur(img)', number=1, repeat=nrep, globals={"img": img, "run_blur":run_blur}))
+        if "histeq" in taskitems:
+            tdata["histeq"][fn] = min(timeit.repeat(f'run_histeq(img)', number=1, repeat=nrep, globals={"img": img, "run_histeq":run_histeq}))
+    return tdata
 
 # tdata = time_generics("/tmp/imgs")
