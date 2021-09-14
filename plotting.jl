@@ -82,5 +82,46 @@ end
 
 # taskplots(randomtag, randomlabel, "julia/julia_generics.csv" => "Julia",
 #                                   "python-skimage/python_generics.csv" => "python-skimage",
-#                                   "opencv/opencv_generics.csv" => "OpenCV")
+#                                   "matlab/matlab_generics.csv" => "Matlab",
+#                                   "opencv/opencv_generics.csv" => "OpenCV",
+# )
 
+function specialplots(filelabel::Pair...; colordict=nothing)
+    # Read all the data
+    benchdata = Dict{String,DataFrame}()
+    for (file, label) in filelabel
+        benchdata[label] = DataFrame(CSV.File(file; delim=','))
+    end
+    # Ensure all inputs have the same tasks
+    tasknames = sort(first(benchdata).second."Benchmark")
+    all(df -> Set(df."Benchmark") == Set(tasknames), values(benchdata))
+    # Assign colors to each suite
+    if colordict === nothing
+        colordict = Dict(zip(keys(benchdata), hexhash.(distinguishable_colors(length(benchdata), [colorant"white"]; dropseed=true))))
+    end
+    fig, ax = plt.subplots()
+    x = 1:length(tasknames)
+    w = 1/(2*length(benchdata))
+    for (i, (label, df)) in enumerate(benchdata)
+        p = Int.(indexin(df."Benchmark", tasknames))
+        dfs = df[invperm(p),:]
+        display(dfs)
+        ax.bar(x .+ (i-1)*w .- w/2, dfs."Time(s)", w; label=label, color=colordict[label])
+    end
+    ax.set_xticks(x)
+    repnames = map(tasknames) do tn
+        foldl((str, rep) -> replace(str, rep), ["components" => "label_components", "dblcone" => "distance_transform", "spiral" => "flood"]; init=tn)
+    end
+    ax.set_xticklabels(repnames; rotation=90)
+    ax.set_yscale("log")
+    ax.set_ylabel("Time (s)")
+    fig.legend()
+    fig.tight_layout()
+    return fig
+end
+
+# specialplots("julia/julia_special.csv" => "Julia",
+#              "python-skimage/python_special.csv" => "python-skimage",
+#              "matlab/matlab_special.csv" => "Matlab",
+#              #= "opencv/opencv_special.csv" => "OpenCV", =#
+# )
