@@ -2,6 +2,9 @@ import skimage
 from skimage import io
 from skimage import filters
 from skimage import exposure
+from skimage import measure
+from skimage import segmentation
+import scipy.ndimage.morphology
 import numpy as np
 import timeit
 import os
@@ -53,3 +56,47 @@ def time_generics_(tdata, workdir, taskitems):
     return tdata
 
 # tdata = time_generics("/tmp/imgs")
+
+def run_label(img):
+    return measure.label(img)
+def closure_label(img):
+    def inner():
+        run_label(img)
+    return inner
+
+def run_disttform(img):
+    return scipy.ndimage.morphology.distance_transform_edt(img)
+def closure_disttform(img):
+    def inner():
+        run_disttform(img)
+    return inner
+
+def run_flood(img):
+    def div2(x):
+        return x // 2
+    middle = tuple(map(div2, img.shape))
+    return segmentation.flood(img, middle, connectivity=1, tolerance=0.5*255)
+def closure_flood(img):
+    def inner():
+        run_flood(img)
+    return inner
+
+def time_special(workdir, ext=".tif"):
+    tdata = {}
+    for f in ("components2d", "components3d"):
+        img = io.imread(os.path.join(workdir, f + ext))
+        tmr = timeit.Timer(closure_label(img))
+        n, t = tmr.autorange()
+        tdata[f] = t/n
+    for f in ("dblcone2d", "dblcone3d"):
+        img = io.imread(os.path.join(workdir, f + ext))
+        tmr = timeit.Timer(closure_disttform(img))
+        n, t = tmr.autorange()
+        tdata[f] = t/n
+    for f in ("spiral2d", "spiral3d"):
+        img = io.imread(os.path.join(workdir, f + ext))
+        tmr = timeit.Timer(closure_flood(img))
+        n, t = tmr.autorange()
+        tdata[f] = t/n
+
+    return tdata

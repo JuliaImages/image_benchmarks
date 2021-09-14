@@ -37,7 +37,7 @@ end
 
 # tdata = time_generics("/tmp/imgs")
 
-run_label(img) = label_components(img)
+run_label(img) = label_components(img, trues(ntuple(_->3, ndims(img))))
 
 run_disttform(img) = distance_transform(feature_transform(img))
 
