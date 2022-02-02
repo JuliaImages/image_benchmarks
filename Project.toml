@@ -6,3 +6,6 @@ DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 OpenCV = "f878e3a2-a245-4720-8660-60795d644f2a"
 ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
 PyPlot = "d330b81b-6aea-500a-939a-2ce795aea3ee"
+
+[compat]
+CSV = "0.9.3"

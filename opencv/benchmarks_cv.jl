@@ -2,6 +2,8 @@ using OpenCV
 using BenchmarkTools
 using ProgressMeter
 
+using OpenCV: Mat
+
 # Stuff to add to OpenCV:
 Base.materialize!(dest::OpenCV.Mat, src::Broadcast.Broadcasted{Style,Axes,typeof(+),Tuple{<:OpenCV.Mat,<:OpenCV.Mat}}) where {Style,Axes} =
     OpenCV.add(src.args..., dest)
@@ -65,3 +67,50 @@ function time_generics(workdir)
 end
 
 # tdata = time_generics("/tmp/imgs")
+
+# For things that OpenCV just can't do
+return_err(img) = error("not supported")
+
+run_label(img) = OpenCV.connectedComponents(img; connectivity=Cint(8))
+
+run_disttform(img) = OpenCV.distanceTransform(img, OpenCV.DIST_L2, OpenCV.DIST_MASK_3)
+
+function run_flood(img)
+    middle = map(Base.tail(axes(img))) do ax
+        (first(ax) + last(ax)) ÷ 2
+    end
+    val = img[:, middle...]
+    @show val
+    loDiff = eltype(img).(val .- half(img))
+    upDiff = white(img) .- val
+    masksz = ntuple(d -> d == 1 ? size(img, 1) : size(img, d) + 2, ndims(img))
+    mask = falses(masksz)
+    newval = (fill(white(img), size(img, 1))...,)
+    @show loDiff upDiff newval middle
+    OpenCV.floodFill(img, Mat(UInt8.(mask)), OpenCV.Point{Cint}(reverse(middle)...), newval, (loDiff...,), (upDiff...,), Cint(4) | OpenCV.FLOODFILL_MASK_ONLY)
+end
+
+white(img::Mat{T}) where T<:Integer = typemax(T)
+white(img::Mat{T}) where T<:AbstractFloat = oneunit(T)
+half(img::Mat{T}) where T<:Integer = white(img) ÷ 2
+half(img::Mat{T}) where T<:AbstractFloat = white(img) / 2
+
+function time_special(workdir)
+    imgs = ["components2d" => run_label, "components3d" => return_err,
+            "dblcone2d" => run_disttform, "dblcone3d" => return_err,
+            "spiral2d" => run_flood, "spiral3d" => return_err]
+    fls = readdir(workdir)
+    tdata = Dict{String,Float64}()
+    @showprogress "Timing special operations: " for (name, f) in imgs
+        @show name
+        idx = findfirst(str->startswith(str, name), fls)
+        img = OpenCV.imread(joinpath(workdir, fls[idx]), OpenCV.IMREAD_UNCHANGED)
+        if f === run_label
+            img = Mat(UInt8.(img .> 0))
+        end
+        tdata[name] = try @belapsed $f($img) evals=1 catch NaN end
+    end
+    return tdata
+end
+
+# tdata = time_special("/tmp/imgspecial")
