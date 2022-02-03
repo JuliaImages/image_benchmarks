@@ -1,2 +1,9 @@
 Manifest.toml
 *.csv
+
+java-imglib2/.classpath
+java-imglib2/.project
+java-imglib2/.settings/
+
+# Maven #
+java-imglib2/target/

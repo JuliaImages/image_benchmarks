@@ -39,7 +39,7 @@ public class Benchmarks
                 invertArrayImage(img);
             }
             long endTime = System.nanoTime();
-            System.out.println("Invert, "+file+String.valueOf((double)(endTime-startTime)/(niter*1000000))+"ms");
+            System.out.println("Invert, "+file+": "+String.valueOf((double)(endTime-startTime)/(niter*1000000))+"ms");
         }
     }
 

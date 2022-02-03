@@ -9,8 +9,8 @@
 		<relativePath />
 	</parent>
 
-	<groupId>net.imglib2</groupId>
-	<artifactId>imglib2-tutorials</artifactId>
+	<groupId>org.juliaimages</groupId>
+	<artifactId>ImgLib2-Benchmarks</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 
 	<name>ImgLib2 Benchmarks</name>
