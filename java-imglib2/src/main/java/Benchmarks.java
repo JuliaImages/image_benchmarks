@@ -1,3 +1,5 @@
+package benchmarks;
+
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.io.Opener;
@@ -18,7 +20,6 @@ import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 //import net.imglib2.img.planar.PlanarCursor;
 import net.imglib2.img.array.ArrayCursor;
-
 
 public class Benchmarks
 {
