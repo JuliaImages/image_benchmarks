@@ -1,6 +1,6 @@
 package benchmarks;
 
-import java.io.File;
+import java.io.*;
 
 import ij.ImageJ;
 //import ij.ImagePlus;
@@ -34,8 +34,12 @@ public class Benchmarks
 {
     // within this method we define <T> to be a NumericType (depends on the type of ImagePlus)
     // you might want to define it as RealType if you know it cannot be an ImageJ RGB Color image
-    public < T extends NumericType< T > & NativeType< T > > Benchmarks(String workdir) throws java.io.IOException
+    public < T extends NumericType< T > & NativeType< T > > Benchmarks(String workdir, String outName) throws java.io.IOException
     {
+        File outFile = new File(outName);
+        FileOutputStream ostream = new FileOutputStream(outFile);
+        BufferedOutputStream bos = new BufferedOutputStream(ostream);
+        myPrintln(bos, "Benchmark,File,Time(s)");
         File workDir = new File(workdir);
         File filesList[] = workDir.listFiles();
         ImgOpener imgOpener = new ImgOpener();
@@ -49,8 +53,9 @@ public class Benchmarks
             }
             long endTime = System.nanoTime();
 
-            System.out.println("complement,"+removeExtension(file.getName())+","+String.valueOf((double)(endTime-startTime)/(niter*100000000)));
+            myPrintln(bos, "complement,"+removeExtension(file.getName())+","+String.valueOf((double)(endTime-startTime)/(niter*100000000)));
         }
+        bos.close();
         System.out.println("All benchmarks completed");
     }
 
@@ -77,6 +82,12 @@ public class Benchmarks
            return fname;
      }
 
+    public static void myPrintln(BufferedOutputStream bos, String str) throws java.io.IOException {
+        byte[] bytes = str.getBytes();
+        bos.write(bytes);
+        bos.write('\n');
+    }
+
     public static void main( String[] args ) throws java.io.IOException
     {
         // open an ImageJ window
@@ -85,6 +96,6 @@ public class Benchmarks
         System.out.println(args);
 
         // run the benchmarks
-        new Benchmarks(args[0]);
+        new Benchmarks(args[0], args[1]);
     }
 }
