@@ -1,5 +1,3 @@
-Clone https://github.com/imglib/imglib2-tutorials
-
 Install java8 and maven:
 ```
 sudo apt install openjdk-8-jdk
