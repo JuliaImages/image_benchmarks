@@ -53,7 +53,7 @@ public class Benchmarks
             }
             long endTime = System.nanoTime();
 
-            myPrintln(bos, "complement,"+removeExtension(file.getName())+","+String.valueOf((double)(endTime-startTime)/(niter*100000000)));
+            myPrintln(bos, "complement,"+removeExtension(file.getName())+","+String.valueOf((double)(endTime-startTime)/(niter*1000000000)));
         }
         bos.close();
         System.out.println("All benchmarks completed");
