@@ -10,14 +10,4 @@ Then within this directory, from the shell:
 2. type `mvn compile`
 3. type `mvn exec:java -Dexec.mainClass="benchmarks.Benchmarks" -Dexec.args="/tmp/imgbench"` after having prepared the images
 
-Prepare the images from the `julia/` subdirectory,
-
-```
-$ julia -q --project
-julia> include("generate_images.jl")
-generate_special (generic function with 2 methods)
-
-julia> generate_random("/tmp/imgbench")
-
-julia> generate_special("/tmp/imgbench_special")
-```
+Prepare the images from the `julia/` subdirectory as described in the [main README](../README.md).
