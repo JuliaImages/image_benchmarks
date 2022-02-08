@@ -1,7 +1,6 @@
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 ColorVectorSpace = "c3611d14-8923-5661-9e6a-0046d554d3a4"
-GtkReactive = "27996c0f-39cd-5cc1-a27a-05f136f946b6"
 ImageContrastAdjustment = "f332f351-ec65-5f6a-b3d1-319c6670881a"
 ImageCore = "a09fc81d-aa75-5fe9-8630-4744c3626534"
 ImageFiltering = "6a3955dd-da59-5b1f-98d4-e7296123deb5"
