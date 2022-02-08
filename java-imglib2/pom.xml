@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.scijava</groupId>
+		<artifactId>pom-scijava</artifactId>
+		<version>31.1.0</version>
+		<relativePath />
+	</parent>
+
+	<groupId>org.juliaimages</groupId>
+	<artifactId>ImgLib2-Benchmarks</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+
+	<name>ImgLib2 Benchmarks</name>
+	<description>This project tests performance of ImgLib2 against a set of cross-language benchmarks.</description>
+	<url>https://github.com/JuliaImages/image_benchmarks</url>
+	<inceptionYear>2021</inceptionYear>
+	<organization>
+		<name>JuliaImages</name>
+		<url>https://juliaimages.org/stable/</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>MIT license</name>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>timholy</id>
+			<name>Tim Holy</name>
+			<url>https://github.com/timholy</url>
+			<roles>
+				<role>lead</role>
+				<role>developer</role>
+				<role>debugger</role>
+				<role>reviewer</role>
+				<role>support</role>
+				<role>maintainer</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>mkitti</id>
+			<name>Mark Kittisopikul</name>
+			<url>https://imagej.net/User:markkitt</url>
+			<roles>
+				<role>lead</role>
+				<role>developer</role>
+				<role>debugger</role>
+				<role>reviewer</role>
+				<role>support</role>
+				<role>maintainer</role>
+			</roles>
+		</developer>
+	</developers>
+	<contributors>
+		<contributor>
+			<name>TODO</name>
+		</contributor>
+	</contributors>
+
+	<mailingLists>
+		<mailingList>
+			<name>Julia Discourse</name>
+			<archive>https://discourse.julialang.org/</archive>
+		</mailingList>
+	</mailingLists>
+
+
+	<scm>
+		<connection>scm:git:https://github.com/JuliaImages/image_benchmarks</connection>
+		<developerConnection>scm:git:git@github.com:JuliaImages/image_benchmarks.git</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/JuliaImages/image_benchmarks</url>
+	</scm>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/JuliaImages/image_benchmarks/issues</url>
+	</issueManagement>
+	<ciManagement>
+		<system>GitHub Actions</system>
+		<url>https://github.com/JuliaImages/image_benchmarks/actions</url>
+	</ciManagement>
+
+	<properties>
+		<package-name>org.juliaimages.imagebenchmarks</package-name>
+
+		<license.licenseName>mit</license.licenseName>
+		<license.projectName>ImageBenchmarks</license.projectName>
+		<license.organizationName>JuliaImages</license.organizationName>
+		<license.copyrightOwners>Tim Holy and contributors.</license.copyrightOwners>
+	</properties>
+
+	<repositories>
+		<!-- NB: for SciJava dependencies -->
+		<repository>
+			<id>scijava.public</id>
+			<url>https://maven.scijava.org/content/groups/public</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<!-- ImgLib2 dependencies -->
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-algorithm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-algorithm-fft</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-algorithm-gpl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-ij</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-realtransform</artifactId>
+		</dependency>
+
+		<!-- ImageJ dependencies -->
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>ij</artifactId>
+		</dependency>
+
+		<!-- SCIFIO dependencies -->
+		<dependency>
+			<groupId>io.scif</groupId>
+			<artifactId>scifio</artifactId>
+		</dependency>
+
+		<!-- Test scope dependencies -->
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer-vistools</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>
