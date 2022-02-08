@@ -9,7 +9,6 @@ randomlabel(tag) = (tag[1] ? "RGB" : "Gray") * "{" * eltypeidx[tag[2]] * "}, $(t
 
 function imagelt(image1, image2)
     image1 ∈ ("2d", "3d") && image2 ∈ ("2d", "3d") && return image1 < image2
-    @show image1 image2
 
     getcolor(str) = match(r"(Gray|RGB)"i, str).captures[1]::AbstractString
     geteltype(str) = idxeltype[match(r"(N0f8|N0f16|Float32)"i, str).captures[1]]
