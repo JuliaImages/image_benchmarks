@@ -43,8 +43,8 @@ function c = run_label(img)
     c = bwlabel(img);
 end
 
-function d = run_disttform(img)
-    d = bwdist(img);
+function [d, idx] = run_disttform(img)
+    [d, idx] = bwdist(img);  % for comparability also extract the location
 end
 
 function f = run_flood(img)

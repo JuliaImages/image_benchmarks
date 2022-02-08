@@ -12,7 +12,7 @@ end
 
 run_gradient(img) = imgradients(img, KernelFactors.sobel)
 
-run_blur(img) = imfilter(img, KernelFactors.gaussian(ntuple(_->5, ndims(img)), ntuple(_->21, ndims(img))))
+run_blur(img) = imfilter(img, KernelFactors.gaussian(ntuple(_->5.0f0, ndims(img)), ntuple(_->21, ndims(img))))
 run_blur_iir(img) = imfilter(img, KernelFactors.IIRGaussian(ntuple(_->5, ndims(img)))) # a bit faster
 
 run_histeq(img) = adjust_histogram(img, Equalization(nbins = 256, minval = 0, maxval = 1))
@@ -58,7 +58,7 @@ function time_special(workdir)
         idx = findfirst(str->startswith(str, name), fls)
         img = load(joinpath(workdir, fls[idx]))
         if f === run_disttform
-            img = Bool.(img)
+            img = convert(Array{Bool}, img)
         end
         tdata[name] = @belapsed $f($img) evals=1
     end

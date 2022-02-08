@@ -44,15 +44,20 @@ def time_generics_(tdata, workdir, taskitems):
         img = io.imread(os.path.join(workdir, fn))
         fn, _ = os.path.splitext(fn)
         if "complement" in taskitems:
-            tdata["complement"][fn] = min(timeit.repeat(f'run_complement(img)', number=1, repeat=nrep, globals={"img": img, "run_complement":run_complement}))
+            n = 100
+            tdata["complement"][fn] = min(timeit.repeat(f'run_complement(img)', number=n, repeat=nrep, globals={"img": img, "run_complement":run_complement}))/n
         if "mean" in taskitems:
-            tdata["mean"][fn] = min(timeit.repeat(f'run_mean(imgr)', f'imgr = setup_mean(img)', number=1, repeat=nrep, globals={"img": img, "setup_mean":setup_mean, "run_mean":run_mean}))
+            n = 100
+            tdata["mean"][fn] = min(timeit.repeat(f'run_mean(imgr)', f'imgr = setup_mean(img)', number=n, repeat=nrep, globals={"img": img, "setup_mean":setup_mean, "run_mean":run_mean}))/n
         if "gradient" in taskitems:
-            tdata["gradient"][fn] = min(timeit.repeat(f'run_gradient(img)', number=1, repeat=nrep, globals={"img": img, "run_gradient":run_gradient}))
+            n = 10
+            tdata["gradient"][fn] = min(timeit.repeat(f'run_gradient(img)', number=n, repeat=nrep, globals={"img": img, "run_gradient":run_gradient}))/n
         if "blur" in taskitems:
-            tdata["blur"][fn] = min(timeit.repeat(f'run_blur(img)', number=1, repeat=nrep, globals={"img": img, "run_blur":run_blur}))
+            n = 10
+            tdata["blur"][fn] = min(timeit.repeat(f'run_blur(img)', number=n, repeat=nrep, globals={"img": img, "run_blur":run_blur}))/n
         if "histeq" in taskitems:
-            tdata["histeq"][fn] = min(timeit.repeat(f'run_histeq(img)', number=1, repeat=nrep, globals={"img": img, "run_histeq":run_histeq}))
+            n = 10
+            tdata["histeq"][fn] = min(timeit.repeat(f'run_histeq(img)', number=n, repeat=nrep, globals={"img": img, "run_histeq":run_histeq}))/n
     return tdata
 
 # tdata = time_generics("/tmp/imgs")
@@ -65,7 +70,7 @@ def closure_label(img):
     return inner
 
 def run_disttform(img):
-    return scipy.ndimage.morphology.distance_transform_edt(img)
+    return scipy.ndimage.morphology.distance_transform_edt(img, return_indices=True)
 def closure_disttform(img):
     def inner():
         run_disttform(img)
