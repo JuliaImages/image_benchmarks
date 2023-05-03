@@ -10,6 +10,8 @@ import timeit
 import os
 from tqdm import tqdm
 
+import corners 
+
 nrep = 16
 
 def run_complement(img):
@@ -24,7 +26,7 @@ def run_gradient(img):
     return (skimage.filters.sobel(img, axis=0), skimage.filters.sobel(img, axis=1))
 
 def run_blur(img):
-    return skimage.filters.gaussian(img, 5, truncate=2, multichannel=True)  # channel_axis=img.ndim-1)
+    return skimage.filters.gaussian(img, 5, truncate=2)  # channel_axis=img.ndim-1)
 
 def run_histeq(img):
     if img.shape[-1] == 3:   # not-very-robust signal of a color image
@@ -36,7 +38,7 @@ def run_histeq(img):
         return skimage.exposure.equalize_hist(img, nbins = 256)
 
 def time_generics(workdir):
-    tdata = {task:{} for task in ["complement", "mean", "gradient", "blur", "histeq"]}
+    tdata = {task:{} for task in ["complement", "mean", "gradient", "blur", "histeq", "corners_harris", "corners_shi_tomasi", "corners_kitchen_rosenfeld", "corners_fastcorners"]}
     return time_generics_(tdata, workdir, tdata.keys())
 
 def time_generics_(tdata, workdir, taskitems):
@@ -58,6 +60,18 @@ def time_generics_(tdata, workdir, taskitems):
         if "histeq" in taskitems:
             n = 10
             tdata["histeq"][fn] = min(timeit.repeat(f'run_histeq(img)', number=n, repeat=nrep, globals={"img": img, "run_histeq":run_histeq}))/n
+        if "corners_harris" in taskitems:
+            n = 10
+            tdata["corners_harris"][fn] = min(timeit.repeat(f'run_imcorner_harris(img)', number=n, repeat=nrep, globals={"img": img, "run_imcorner_harris":corners.run_imcorner_harris}))/n
+        if "corners_shi_tomasi" in taskitems:
+            n = 10
+            tdata["corners_shi_tomasi"][fn] = min(timeit.repeat(f'run_imcorner_shi_tomasi(img)', number=n, repeat=nrep, globals={"img": img, "run_imcorner_shi_tomasi":corners.run_imcorner_shi_tomasi}))/n
+        if "corners_kitchen_rosenfeld" in taskitems:
+            n = 10
+            tdata["corners_kitchen_rosenfeld"][fn] = min(timeit.repeat(f'run_imcorner_kr(img)', number=n, repeat=nrep, globals={"img": img, "run_imcorner_kr":corners.run_imcorner_kr}))/n
+        if "corners_fastcorners" in taskitems:
+            n = 10
+            tdata["corners_fastcorners"][fn] = min(timeit.repeat(f'run_imcorner_fastcorners(img)', number=n, repeat=nrep, globals={"img": img, "run_imcorner_fastcorners":corners.run_imcorner_fastcorners}))/n 
     return tdata
 
 # tdata = time_generics("/tmp/imgs")
